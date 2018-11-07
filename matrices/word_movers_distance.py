@@ -1,3 +1,5 @@
+
+
 def run_wmd_benchmark(sentences1, sentences2, model, use_stoplist=False):
     sims = []
     for (sent1, sent2) in zip(sentences1, sentences2):
