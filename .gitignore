@@ -3,6 +3,7 @@
 
 # User-specific stuff
 .idea
+.ipynb_checkpoints
 
 
 .idea/**/workspace.xml
