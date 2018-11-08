@@ -1,6 +1,6 @@
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
-
+import numpy as np
 
 def remove_first_principal_component(X):
     svd = TruncatedSVD(n_components=1, n_iter=7, random_state=0)
