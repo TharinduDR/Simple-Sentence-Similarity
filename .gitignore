@@ -71,3 +71,4 @@ fabric.properties
 
 #check points
 .ipynb_checkpoints/.idea
+.ipynb_checkpoints
