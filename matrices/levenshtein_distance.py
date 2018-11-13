@@ -8,7 +8,7 @@ def run_levenshtein_benchmark(sentences1, sentences2):
     raw_sentences2 = [sent2.raw for sent2 in sentences2]
 
     for (sent1, sent2) in zip(raw_sentences1, raw_sentences2):
-        sims.append((max(len(sent1), len(sent2))) / (calculate_levenshtein_distance(sent1, sent2)))
+        sims.append(-(calculate_levenshtein_distance(sent1, sent2)) / (max(len(sent1), len(sent2))))
 
     return sims
 
