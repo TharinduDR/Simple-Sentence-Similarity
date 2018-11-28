@@ -6,15 +6,12 @@ import tensorflow as tf
 import tensorflow_hub as hub
 from sklearn.metrics.pairwise import cosine_similarity
 
+from utility.progress_bar import update_progress_bar
+
 elmo = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
 
 
 def run_avg_elmo_benchmark(sentences1, sentences2, doc_freqs=None, batch_size=100):
-    init = tf.initialize_all_variables()
-    sess = tf.Session()
-    sess.run(init)
-    tf.logging.set_verbosity(tf.logging.ERROR)
-
     sims = []
     tokens_list1 = []
     tokens_list2 = []
@@ -35,7 +32,14 @@ def run_avg_elmo_benchmark(sentences1, sentences2, doc_freqs=None, batch_size=10
         if len(tokens2) > max_length2:
             max_length2 = len(tokens2)
 
-    for i in range(len(sentences1 // batch_size)):
+    update_progress_bar(0, len(sentences1) // batch_size, prefix='Progress:', suffix='Complete', length=50)
+
+    for i in range(len(sentences1) // batch_size):
+
+        init = tf.initialize_all_variables()
+        sess = tf.Session()
+        sess.run(init)
+        tf.logging.set_verbosity(tf.logging.ERROR)
 
         if (batch_size * i) + batch_size < len(sentences1):
             sliced_setences1 = sentences1[batch_size * i:(batch_size * i) + batch_size]
@@ -52,13 +56,13 @@ def run_avg_elmo_benchmark(sentences1, sentences2, doc_freqs=None, batch_size=10
             tokens1 = sent1.tokens
             length_list1.append(len(tokens1))
 
-            for i in range(max_length1 - len(tokens1) + 1):
+            for k in range(max_length1 - len(tokens1) + 1):
                 tokens1.append('')
 
             tokens2 = sent2.tokens
             length_list2.append(len(tokens2))
 
-            for i in range(max_length2 - len(tokens2) + 1):
+            for l in range(max_length2 - len(tokens2) + 1):
                 tokens2.append('')
 
             tokens_list1.append(tokens1)
@@ -83,14 +87,16 @@ def run_avg_elmo_benchmark(sentences1, sentences2, doc_freqs=None, batch_size=10
             elmo(inputs={"tokens": tokens_list2, "sequence_len": length_list2}, signature="tokens", as_dict=True)[
                 "elmo"]
 
-        for i in range(len(sliced_setences1)):
-            embedding1 = np.average([embedding for embedding in sess.run(embeddings_list1[i])], axis=0,
+        for j in range(len(sliced_setences1)):
+            embedding1 = np.average([embedding for embedding in sess.run(embeddings_list1[j])], axis=0,
                                     weights=weights_list1[i]).reshape(1, -1)
 
-            embedding2 = np.average([embedding for embedding in sess.run(embeddings_list2[i])], axis=0,
+            embedding2 = np.average([embedding for embedding in sess.run(embeddings_list2[j])], axis=0,
                                     weights=weights_list2[i]).reshape(1, -1)
 
             sim = cosine_similarity(embedding1, embedding2)[0][0]
             sims.append(sim)
+        sess.close()
+        update_progress_bar(i + 1, len(sentences1) // batch_size, prefix='Progress:', suffix='Complete', length=50)
 
     return sims

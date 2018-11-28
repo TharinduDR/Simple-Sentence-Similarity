@@ -1,6 +1,15 @@
 import numpy as np
 from sklearn.decomposition import TruncatedSVD
 from sklearn.metrics.pairwise import cosine_similarity
+import math
+from collections import Counter
+
+import numpy as np
+import tensorflow as tf
+import tensorflow_hub as hub
+
+
+elmo = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
 
 
 def remove_first_principal_component(X):
@@ -11,7 +20,23 @@ def remove_first_principal_component(X):
     return XX
 
 
-def run_sif_benchmark(sentences1, sentences2, model, freqs={}, use_stoplist=False, a=0.001):
+def run_sif_benchmark(sentences1, sentences2, model, freqs={}, a=0.001):
+    init = tf.initialize_all_variables()
+    sess = tf.Session()
+    sess.run(init)
+    tf.logging.set_verbosity(tf.logging.ERROR)
+
+    sims = []
+    tokens_list1 = []
+    tokens_list2 = []
+    length_list1 = []
+    length_list2 = []
+    weights_list2 = []
+    weights_list1 = []
+
+    max_length1 = 0
+    max_length2 = 0
+
     total_freq = sum(freqs.values())
 
     embeddings = []
@@ -19,11 +44,9 @@ def run_sif_benchmark(sentences1, sentences2, model, freqs={}, use_stoplist=Fals
     # SIF requires us to first collect all sentence embeddings and then perform
     # common component analysis.
     for (sent1, sent2) in zip(sentences1, sentences2):
-        tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
-        tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
 
-        tokens1 = [token for token in tokens1 if token in model]
-        tokens2 = [token for token in tokens2 if token in model]
+        tokens1 = sent1.tokens
+        tokens2 = sent2.tokens
 
         weights1 = [a / (a + freqs.get(token, 0) / total_freq) for token in tokens1]
         weights2 = [a / (a + freqs.get(token, 0) / total_freq) for token in tokens2]
