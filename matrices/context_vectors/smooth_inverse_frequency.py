@@ -1,13 +1,8 @@
 import numpy as np
-from sklearn.decomposition import TruncatedSVD
-from sklearn.metrics.pairwise import cosine_similarity
-import math
-from collections import Counter
-
-import numpy as np
 import tensorflow as tf
 import tensorflow_hub as hub
-
+from sklearn.decomposition import TruncatedSVD
+from sklearn.metrics.pairwise import cosine_similarity
 
 elmo = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
 
@@ -26,17 +21,6 @@ def run_sif_benchmark(sentences1, sentences2, model, freqs={}, a=0.001):
     sess.run(init)
     tf.logging.set_verbosity(tf.logging.ERROR)
 
-    sims = []
-    tokens_list1 = []
-    tokens_list2 = []
-    length_list1 = []
-    length_list2 = []
-    weights_list2 = []
-    weights_list1 = []
-
-    max_length1 = 0
-    max_length2 = 0
-
     total_freq = sum(freqs.values())
 
     embeddings = []
@@ -44,7 +28,6 @@ def run_sif_benchmark(sentences1, sentences2, model, freqs={}, a=0.001):
     # SIF requires us to first collect all sentence embeddings and then perform
     # common component analysis.
     for (sent1, sent2) in zip(sentences1, sentences2):
-
         tokens1 = sent1.tokens
         tokens2 = sent2.tokens
 
