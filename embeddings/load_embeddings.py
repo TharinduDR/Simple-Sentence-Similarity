@@ -12,3 +12,8 @@ def load_glove(path):
     glove2word2vec(path, tmp_file)
     glove = gensim.models.KeyedVectors.load_word2vec_format(tmp_file)
     return glove
+
+
+def load_fasttext(path):
+    fasttext = gensim.models.KeyedVectors.load_word2vec_format(path, binary=False)
+    return fasttext
