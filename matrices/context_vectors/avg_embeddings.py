@@ -52,12 +52,12 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
         embeddings1 = \
             elmo(inputs={"tokens": [tokens1], "sequence_len": [len(tokens1)]}, signature="tokens", as_dict=True)[
                 "elmo"]
-        embedding1 = sess.run(embeddings1[0])
+        raw_embedding1 = sess.run(embeddings1[0])
 
         sess.close()
 
     else:
-        embedding1 = np.load(os.path.join(model_path, '1', file_name1 + '.npy'))
+        raw_embedding1 = np.load(os.path.join(model_path, '1', file_name1 + '.npy'))
 
     if not os.path.isfile(os.path.join(model_path, '2', file_name2 + '.npy')):
 
@@ -69,12 +69,12 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
         embeddings2 = \
             elmo(inputs={"tokens": [tokens2], "sequence_len": [len(tokens2)]}, signature="tokens", as_dict=True)[
                 "elmo"]
-        embedding2 = sess.run(embeddings2[0])
+        raw_embedding2 = sess.run(embeddings2[0])
 
         sess.close()
 
     else:
-        embedding2 = np.load(os.path.join(model_path, '2', file_name2 + '.npy'))
+        raw_embedding2 = np.load(os.path.join(model_path, '2', file_name2 + '.npy'))
 
     related_tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
     related_tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
@@ -88,7 +88,7 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
     if len(related_tokens1) != len(tokens1):
         for related_token1 in related_tokens1:
             index = tokens1.index(related_token1)
-            related_embeddings1.append(embedding1[index])
+            related_embeddings1.append(raw_embedding1[index])
             if doc_freqs is not None:
                 related_weights1.append((weights1[index]))
             else:
@@ -97,13 +97,13 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
         embedding1 = np.average([embedding for embedding in related_embeddings1], axis=0,
                                 weights=related_weights1).reshape(1, -1)
     else:
-        embedding1 = np.average([embedding for embedding in embedding1], axis=0,
+        embedding1 = np.average([embedding for embedding in raw_embedding1], axis=0,
                                 weights=weights1).reshape(1, -1)
 
     if len(related_tokens2) != len(tokens2):
         for related_token2 in related_tokens2:
             index = tokens2.index(related_token2)
-            related_embeddings2.append(embedding2[index])
+            related_embeddings2.append(raw_embedding2[index])
 
             if doc_freqs is not None:
                 related_weights2.append(weights2[index])
@@ -115,9 +115,9 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
                                 weights=related_weights2).reshape(1, -1)
 
     else:
-        embedding2 = np.average([embedding for embedding in embedding2], axis=0,
+        embedding2 = np.average([embedding for embedding in raw_embedding2], axis=0,
                                 weights=weights2).reshape(1, -1)
 
-    sim = cosine_similarity(embedding1, embedding2)[0][0]
+    sim = cosine_similarity(embedding1[0], embedding2[0])[0][0]
 
     return sim

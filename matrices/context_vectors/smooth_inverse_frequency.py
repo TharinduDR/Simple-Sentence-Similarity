@@ -19,7 +19,7 @@ def remove_first_principal_component(X):
     return XX
 
 
-def run_sif_benchmark(sentences1, sentences2, model_path, freqs={}, a=0.001):
+def run_sif_elmo_benchmark(sentences1, sentences2, model_path, freqs={}, use_stoplist=False, a=0.001):
     total_freq = sum(freqs.values())
 
     embeddings = []
@@ -46,12 +46,22 @@ def run_sif_benchmark(sentences1, sentences2, model_path, freqs={}, a=0.001):
             embeddings1 = \
                 elmo(inputs={"tokens": [tokens1], "sequence_len": [len(tokens1)]}, signature="tokens", as_dict=True)[
                     "elmo"]
-            embedding1 = sess.run(embeddings1[0])
+            raw_embedding1 = sess.run(embeddings1[0]).tolist()
 
             sess.close()
 
         else:
-            embedding1 = np.load(os.path.join(model_path, '1', file_name1 + '.npy'))
+            raw_embedding1 = np.load(os.path.join(model_path, '1', file_name1 + '.npy')).tolist()
+
+        formatted_embedding1 = []
+
+        for embedding in raw_embedding1:
+            formatted_embedding1.append(np.asarray(embedding, dtype=np.float32))
+
+        embedding1 = np.average(formatted_embedding1, axis=0,
+                                weights=weights1).reshape(1, -1)
+
+        embeddings.append(embedding1[0])
 
         if not os.path.isfile(os.path.join(model_path, '2', file_name2 + '.npy')):
 
@@ -63,20 +73,22 @@ def run_sif_benchmark(sentences1, sentences2, model_path, freqs={}, a=0.001):
             embeddings2 = \
                 elmo(inputs={"tokens": [tokens2], "sequence_len": [len(tokens2)]}, signature="tokens", as_dict=True)[
                     "elmo"]
-            embedding2 = sess.run(embeddings2[0])
+            raw_embedding2 = sess.run(embeddings2[0]).tolist()
 
             sess.close()
 
         else:
-            embedding2 = np.load(os.path.join(model_path, '2', file_name2 + '.npy'))
+            raw_embedding2 = np.load(os.path.join(model_path, '2', file_name2 + '.npy')).tolist()
 
+        formatted_embedding2 = []
 
+        for embedding in raw_embedding2:
+            formatted_embedding2.append(np.asarray(embedding, dtype=np.float32))
 
-        embedding1 = np.average([model[token] for token in tokens1], axis=0, weights=weights1)
-        embedding2 = np.average([model[token] for token in tokens2], axis=0, weights=weights2)
+        embedding2 = np.average(formatted_embedding2, axis=0,
+                                weights=weights2).reshape(1, -1)
 
-        embeddings.append(embedding1)
-        embeddings.append(embedding2)
+        embeddings.append(embedding2[0])
 
     embeddings = remove_first_principal_component(np.array(embeddings))
     sims = [cosine_similarity(embeddings[idx * 2].reshape(1, -1),
