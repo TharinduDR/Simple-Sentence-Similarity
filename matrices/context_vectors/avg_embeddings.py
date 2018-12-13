@@ -118,6 +118,6 @@ def get_similarity(sent1, sent2, model_path, doc_freqs=None, use_stoplist=False)
         embedding2 = np.average([embedding for embedding in raw_embedding2], axis=0,
                                 weights=weights2).reshape(1, -1)
 
-    sim = cosine_similarity(embedding1[0], embedding2[0])[0][0]
+    sim = cosine_similarity(embedding1, embedding2)[0][0]
 
     return sim
