@@ -3,7 +3,7 @@ import nltk
 STOP = set(nltk.corpus.stopwords.words("english"))
 
 
-class Sentence:
+class SentenceModel:
 
     def __init__(self, sentence):
         self.raw = sentence
