@@ -36,11 +36,11 @@ Sentence SImilarity can be used for many domains in natural language processing,
 
 | Model  | RMSE |
 | ------------- | ------------- |
-| SIF - W2V     | 0.204  |
+| SIF - W2V <sup>*</sup>    | 0.204 <sup>*</sup> |
 | SIF - ELMO    | 0.193  |
 | SIF-FLAIR     | 0.201  |
 | SIF-BERT      | 0.184  |
-| SIF-BERT+ELMO  |0.181  |
+| SIF-BERT+ELMO<sup>✞</sup>  |0.181 <sup>✞</sup> |
 
 #### Word Moving distance benchmark
 
@@ -58,4 +58,4 @@ Sentence SImilarity can be used for many domains in natural language processing,
 | WMD-BERT+ELMO-STOP  | 0.228  |
 
 ### Conclusions
-Eventhough the contextual embeddings didn't improve  word average and moving distance benchmarks, it improved the smooth inverse frequency benchmark significantly. Best results were provided when BERT and ELMO were stacked together.
+Eventhough the contextual embeddings didn't improve  word average and moving distance benchmarks, it improved the smooth inverse frequency benchmark significantly. Best results were provided when BERT and ELMO were stacked together.<sup>✞</sup> denotes the best result and <sup>*</sup> denotes the current best benchmark.
