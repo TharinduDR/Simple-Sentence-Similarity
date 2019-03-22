@@ -58,4 +58,4 @@ Sentence SImilarity can be used for many domains in natural language processing,
 | WMD-BERT+ELMO-STOP  | 0.228  |
 
 ### Conclusions
-Eventhough the contextual embeddings didn't improve  word average and moving distance benchmarks, it improved the smooth inverse frequency benchmark significantly. Best results were provided when BERT and ELMO were stacked together.<sup>✞</sup> denotes the best result and <sup>*</sup> denotes the current best benchmark.
+Even though the contextual embeddings didn't improve  word average and moving distance benchmarks, it improved the smooth inverse frequency benchmark significantly. Best results were provided when BERT and ELMO were stacked together.<sup>✞</sup> denotes the best result and <sup>*</sup> denotes the current best benchmark.
