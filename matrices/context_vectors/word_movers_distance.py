@@ -1,15 +1,12 @@
 from __future__ import division  # py3 "true division"
 
 import logging
-import os
 
 import numpy as np
-import tensorflow as tf
 import tensorflow_hub as hub
-
 # If pyemd C extension is available, import it.
 # If pyemd is attempted to be used, but isn't installed, ImportError will be raised in wmdistance
-from utility.hashing import convert_to_number
+from flair.data import Sentence
 
 try:
     from pyemd import emd
@@ -25,91 +22,78 @@ from six.moves import zip
 logger = logging.getLogger(__name__)
 elmo = hub.Module("https://tfhub.dev/google/elmo/2", trainable=True)
 
+embeddings_map1 = {}
+embeddings_map2 = {}
 
-def run_elmo_wmd_benchmark(sentences1, sentences2, model_path, use_stoplist=False):
+
+def run_context_wmd_benchmark(sentences1, sentences2, model, use_stoplist=False):
     sims = []
     for (sent1, sent2) in zip(sentences1, sentences2):
 
-        tokens1 = sent1.tokens
-        tokens2 = sent2.tokens
+        tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
+        tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
 
-        file_name1 = str(convert_to_number(sent1.raw))
-        file_name2 = str(convert_to_number(sent2.raw))
+        tokens1 = [token for token in tokens1]
+        tokens2 = [token for token in tokens2]
 
-        if not os.path.isfile(os.path.join(model_path, '1', file_name1 + '.npy')):
+        if len(tokens1) == 0 or len(tokens2) == 0:
+            tokens1 = [token for token in sent1.tokens if token in model]
+            tokens2 = [token for token in sent2.tokens if token in model]
 
-            init = tf.initialize_all_variables()
-            sess = tf.Session()
-            sess.run(init)
-            tf.logging.set_verbosity(tf.logging.ERROR)
+        flair_tokens1 = sent1.tokens
+        flair_tokens2 = sent2.tokens
 
-            embeddings1 = \
-                elmo(inputs={"tokens": [tokens1], "sequence_len": [len(tokens1)]}, signature="tokens", as_dict=True)[
-                    "elmo"]
-            raw_embedding1 = sess.run(embeddings1[0]).tolist()
+        flair_sent1 = Sentence(" ".join(flair_tokens1))
+        flair_sent2 = Sentence(" ".join(flair_tokens2))
 
-            sess.close()
+        model.embed(flair_sent1)
+        model.embed(flair_sent2)
 
-        else:
-            raw_embedding1 = np.load(os.path.join(model_path, '1', file_name1 + '.npy')).tolist()
+        for token in flair_sent1:
+            embeddings_map1[token.text] = np.array(token.embedding.data.tolist())
 
-        formatted_embedding1 = []
+        for token in flair_sent2:
+            embeddings_map2[token.text] = np.array(token.embedding.data.tolist())
 
-        for embedding in raw_embedding1:
-            formatted_embedding1.append(np.asarray(embedding, dtype=np.float32))
-
-        if not os.path.isfile(os.path.join(model_path, '2', file_name2 + '.npy')):
-
-            init = tf.initialize_all_variables()
-            sess = tf.Session()
-            sess.run(init)
-            tf.logging.set_verbosity(tf.logging.ERROR)
-
-            embeddings2 = \
-                elmo(inputs={"tokens": [tokens2], "sequence_len": [len(tokens2)]}, signature="tokens", as_dict=True)[
-                    "elmo"]
-            raw_embedding2 = sess.run(embeddings2[0]).tolist()
-
-            sess.close()
-
-        else:
-            raw_embedding2 = np.load(os.path.join(model_path, '2', file_name2 + '.npy')).tolist()
-
-        formatted_embedding2 = []
-
-        for embedding in raw_embedding2:
-            formatted_embedding2.append(np.asarray(embedding, dtype=np.float32))
-
-        related_tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
-        related_tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
-
-        related_embeddings1 = []
-        related_embeddings2 = []
-
-        if len(related_tokens1) != len(tokens1):
-            for related_token1 in related_tokens1:
-                index = tokens1.index(related_token1)
-                related_embeddings1.append(raw_embedding1[index])
-
-        else:
-            related_embeddings1 = raw_embedding1
-
-        if len(related_tokens2) != len(tokens2):
-            for related_token2 in related_tokens2:
-                index = tokens2.index(related_token2)
-                related_embeddings2.append(raw_embedding2[index])
-
-        else:
-            related_embeddings2 = raw_embedding2
-
-        sims.append(-wmdistance(related_tokens1, related_tokens2, related_embeddings1, related_embeddings2))
+        sims.append(-wmdistance(tokens1, tokens2))
 
     return sims
 
 
-def wmdistance(document1, document2, embeddings1, embeddings2):
+def wmdistance(document1, document2):
+    """
+    Compute the Word Mover's Distance between two documents. When using this
+    code, please consider citing the following papers:
+
+    .. Ofir Pele and Michael Werman, "A linear time histogram metric for improved SIFT matching".
+    .. Ofir Pele and Michael Werman, "Fast and robust earth mover's distances".
+    .. Matt Kusner et al. "From Word Embeddings To Document Distances".
+
+    Note that if one of the documents have no words that exist in the
+    Word2Vec vocab, `float('inf')` (i.e. infinity) will be returned.
+
+    This method only works if `pyemd` is installed (can be installed via pip, but requires a C compiler).
+    """
+
     if not PYEMD_EXT:
         raise ImportError("Please install pyemd Python package to compute WMD.")
+
+    # Remove out-of-vocabulary words.
+    len_pre_oov1 = len(document1)
+    len_pre_oov2 = len(document2)
+    document1 = [token for token in document1]
+    document2 = [token for token in document2]
+    diff1 = len_pre_oov1 - len(document1)
+    diff2 = len_pre_oov2 - len(document2)
+    if diff1 > 0 or diff2 > 0:
+        logger.info('Removed %d and %d OOV words from document 1 and 2 (respectively).', diff1, diff2)
+
+    if len(document1) == 0 or len(document2) == 0:
+        logger.info(
+            "At least one of the documents had no words that werein the vocabulary. "
+            "Aborting (returning inf)."
+        )
+        return float('inf')
 
     dictionary = Dictionary(documents=[document1, document2])
     vocab_len = len(dictionary)
@@ -129,12 +113,7 @@ def wmdistance(document1, document2, embeddings1, embeddings2):
             if t1 not in docset1 or t2 not in docset2:
                 continue
             # Compute Euclidean distance between word vectors.
-            indext1 = document1.index(t1)
-            indext2 = document2.index(t2)
-            embeddingt1 = np.asarray(embeddings1[indext1], np.float32)
-            embeddingt2 = np.asarray(embeddings2[indext2], np.float32)
-
-            distance_matrix[i, j] = sqrt(np_sum((embeddingt1 - embeddingt2) ** 2))
+            distance_matrix[i, j] = sqrt(np_sum((embeddings_map1[t1] - embeddings_map2[t2]) ** 2))
 
     if np_sum(distance_matrix) == 0.0:
         # `emd` gets stuck if the distance matrix contains only zeros.
