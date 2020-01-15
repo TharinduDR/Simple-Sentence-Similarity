@@ -59,3 +59,15 @@ Sentence SImilarity can be used for many domains in natural language processing,
 
 ### Conclusions
 Even though the contextual embeddings didn't improve  word average and moving distance benchmarks, it improved the smooth inverse frequency benchmark significantly. Best results were provided when BERT and ELMO were stacked together.<sup>✞</sup> denotes the best result and <sup>*</sup> denotes the current best benchmark.
+
+### References
+If you find this code useful in your research, please consider citing:
+
+>
+> @inproceedings{ranashinghe2019enhancing,    
+    title={Enhancing unsupervised sentence similarity methods with deep contextualised word representations},    
+    author={Ranashinghe, Tharindu and Orasan, Constantin and Mitkov, Ruslan},    
+    booktitle={Proceedings of the Recent Advances in Natural Language Processing (RANLP)},    
+    year={2019} 
+  }\
+  
