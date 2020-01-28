@@ -64,10 +64,18 @@ Even though the contextual embeddings didn't improve  word average and moving di
 If you find this code useful in your research, please consider citing:
 
 >
-> @inproceedings{ranashinghe2019enhancing,    
-    title={Enhancing unsupervised sentence similarity methods with deep contextualised word representations},    
-    author={Ranashinghe, Tharindu and Orasan, Constantin and Mitkov, Ruslan},    
-    booktitle={Proceedings of the Recent Advances in Natural Language Processing (RANLP)},    
-    year={2019} 
-  }\
+> @inproceedings{ranasinghe-etal-2019-enhancing,
+    title = "Enhancing Unsupervised Sentence Similarity Methods with Deep Contextualised Word Representations",
+    author = "Ranasinghe, Tharindu  and
+      Orasan, Constantin  and
+      Mitkov, Ruslan",
+    booktitle = "Proceedings of the International Conference on Recent Advances in Natural Language Processing (RANLP 2019)",
+    month = sep,
+    year = "2019",
+    address = "Varna, Bulgaria",
+    publisher = "INCOMA Ltd.",
+    url = "https://www.aclweb.org/anthology/R19-1115",
+    doi = "10.26615/978-954-452-056-4_115",
+    pages = "994--1003",
+    }
   
