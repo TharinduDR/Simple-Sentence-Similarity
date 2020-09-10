@@ -12,6 +12,7 @@ from preprocessing.load_data import download_and_load_sts_data, download_and_loa
 from preprocessing.normalize import normalize
 from utility.frequency_loader import load_frequencies, load_doc_frequencies
 from utility.run_experiment import run_experiment
+import os
 
 sick_all, sick_train, sick_test, sick_dev = download_and_load_sick_dataset()
 print('Downloaded data')
@@ -45,8 +46,7 @@ for benchmark in benchmarks:
     ax = data.plot(kind='scatter', x='id', y='sim', color='DarkBlue', label='Similarity', title=topic)
     data.plot(kind='scatter', x='id', y='predicted_sim', color='DarkGreen', label='Predicted Similarity',
                     ax=ax);
-    ax.text(1500, 0, textstr, fontsize=12)
     fig = ax.get_figure()
-    fig.savefig(os.pth.join(IMAGE_PATH, topic))
+    fig.savefig(os.pth.join(IMAGE_PATH, topic+".png"))
     print(topic)
     print(textstr)
