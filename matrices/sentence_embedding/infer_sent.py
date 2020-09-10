@@ -1,6 +1,7 @@
 from sklearn.metrics.pairwise import cosine_similarity
 
 
+
 def run_inf_benchmark(sentences1, sentences2, infersent):
     raw_sentences1 = [sent1.raw for sent1 in sentences1]
     raw_sentences2 = [sent2.raw for sent2 in sentences2]

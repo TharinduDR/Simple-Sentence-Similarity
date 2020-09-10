@@ -1,7 +1,12 @@
 from sklearn.metrics.pairwise import cosine_similarity
 
+import tensorflow_hub as hub
+import tensorflow as tf
 
-def run_gse_benchmark(sentences1, sentences2, embed):
+tf.logging.set_verbosity(tf.logging.ERROR)
+embed = hub.Module("https://tfhub.dev/google/universal-sentence-encoder/1")
+
+def run_gse_benchmark(sentences1, sentences2):
     raw_sentences1 = [sent1.raw for sent1 in sentences1]
     raw_sentences2 = [sent2.raw for sent2 in sentences2]
 
