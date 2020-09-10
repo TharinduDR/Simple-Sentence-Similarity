@@ -22,6 +22,9 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         flair_sent1 = Sentence(" ".join(flair_tokens1))
         flair_sent2 = Sentence(" ".join(flair_tokens2))
 
+        print("sent_1 is " + flair_sent1)
+        print("sent_2 is " + flair_sent2)
+
         model.embed(flair_sent1)
         model.embed(flair_sent2)
 
