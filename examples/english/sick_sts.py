@@ -14,6 +14,9 @@ from utility.frequency_loader import load_frequencies, load_doc_frequencies
 from utility.run_experiment import run_experiment
 import os
 
+if not os.path.exists(IMAGE_PATH):
+    os.makedirs(IMAGE_PATH)
+
 sick_all, sick_train, sick_test, sick_dev = download_and_load_sick_dataset()
 print('Downloaded data')
 
@@ -47,6 +50,6 @@ for benchmark in benchmarks:
     data.plot(kind='scatter', x='id', y='predicted_sim', color='DarkGreen', label='Predicted Similarity',
                     ax=ax);
     fig = ax.get_figure()
-    fig.savefig(os.pth.join(IMAGE_PATH, topic+".png"))
+    fig.savefig(os.path.join(IMAGE_PATH, topic+".png"))
     print(topic)
     print(textstr)
