@@ -54,3 +54,20 @@ def download_and_load_sick_dataset():
     sick_all = sick_train.append(sick_test).append(sick_dev)
 
     return sick_all, sick_train, sick_test, sick_dev
+
+
+def load_quora_dataset(filename):
+    """
+     Loads a subset of the STS dataset into a DataFrame.
+     In particular both sentences and their human rated similarity score.
+    :param filename:
+    :return:
+    """
+    sent_pairs = []
+    with open(filename, encoding="utf8") as f:
+        next(f)
+        for line in f:
+            ts = line.strip().split("\t")
+            if len(ts) == 6:
+                sent_pairs.append((ts[0],ts[3], ts[4], float(ts[5])))
+    return pd.DataFrame(sent_pairs, columns=["id", "sent_1", "sent_2", "sim"])
