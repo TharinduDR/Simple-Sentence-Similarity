@@ -49,6 +49,7 @@ for benchmark in benchmarks:
     ax = data.plot(kind='scatter', x='id', y='sim', color='DarkBlue', label='Similarity', title=topic)
     data.plot(kind='scatter', x='id', y='predicted_sim', color='DarkGreen', label='Predicted Similarity',
                     ax=ax);
+    ax.text(1500, 0, textstr, fontsize=12)
     fig = ax.get_figure()
     fig.savefig(os.path.join(IMAGE_PATH, topic+".png"))
     print(topic)

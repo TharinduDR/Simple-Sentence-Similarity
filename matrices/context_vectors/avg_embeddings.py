@@ -45,9 +45,9 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         tokfreqs2 = Counter(tokens2)
 
         weights1 = [tokfreqs1[token] * math.log(N / (doc_freqs.get(token, 0) + 1))
-                    for token in tokfreqs1] if doc_freqs else None
+                    for token in tokfreqs1 if token in embeddings_map1] if doc_freqs else None
         weights2 = [tokfreqs2[token] * math.log(N / (doc_freqs.get(token, 0) + 1))
-                    for token in tokfreqs2] if doc_freqs else None
+                    for token in tokfreqs2 if token in embeddings_map2] if doc_freqs else None
 
         embedding1 = np.average([embeddings_map1[token] for token in tokfreqs1 if token in embeddings_map1], axis=0, weights=weights1).reshape(1, -1)
         embedding2 = np.average([embeddings_map2[token] for token in tokfreqs2 if token in embeddings_map2], axis=0, weights=weights2).reshape(1, -1)
