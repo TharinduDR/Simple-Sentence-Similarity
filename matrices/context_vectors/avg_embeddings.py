@@ -22,8 +22,8 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         flair_sent1 = Sentence(" ".join(flair_tokens1))
         flair_sent2 = Sentence(" ".join(flair_tokens2))
 
-        print("sent_1 is " + (" ".join(flair_tokens1)))
-        print("sent_2 is " + (" ".join(flair_tokens2)))
+        # print("sent_1 is " + (" ".join(flair_tokens1)))
+        # print("sent_2 is " + (" ".join(flair_tokens2)))
 
         model.embed(flair_sent1)
         model.embed(flair_sent2)
@@ -49,8 +49,8 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         weights2 = [tokfreqs2[token] * math.log(N / (doc_freqs.get(token, 0) + 1))
                     for token in tokfreqs2] if doc_freqs else None
 
-        embedding1 = np.average([embeddings_map1[token] for token in tokfreqs1], axis=0, weights=weights1).reshape(1, -1)
-        embedding2 = np.average([embeddings_map2[token] for token in tokfreqs2], axis=0, weights=weights2).reshape(1, -1)
+        embedding1 = np.average([embeddings_map1[token] for token in tokfreqs1 if token in embeddings_map1], axis=0, weights=weights1).reshape(1, -1)
+        embedding2 = np.average([embeddings_map2[token] for token in tokfreqs2 if token in embeddings_map2], axis=0, weights=weights2).reshape(1, -1)
 
         sim = cosine_similarity(embedding1, embedding2)[0][0]
         sims.append(sim)
