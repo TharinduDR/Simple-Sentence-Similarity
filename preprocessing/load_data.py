@@ -13,7 +13,7 @@ def load_sts_dataset(filename):
     :return:
     """
     sent_pairs = []
-    with tf.gfile.GFile(filename, "r") as f:
+    with tf.io.gfile.GFile(filename, "r") as f:
         for line in f:
             ts = line.strip().split("\t")
             sent_pairs.append((ts[5], ts[6], float(ts[4])))
