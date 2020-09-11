@@ -1,7 +1,8 @@
 import scipy
 from sklearn.metrics import mean_squared_error
 from math import sqrt
-from flair.embeddings import ELMoEmbeddings
+from flair.embeddings import ELMoEmbeddings, TransformerWordEmbeddings, StackedEmbeddings, WordEmbeddings, \
+    FlairEmbeddings
 import functools as ft
 import pandas as pd
 from embeddings.load_embeddings import load_word2vec
@@ -23,16 +24,36 @@ print('Downloaded data')
 frequency = load_frequencies("data/frequencies/frequencies.tsv")
 doc_frequency = load_doc_frequencies("data/frequencies/doc_frequencies.tsv")
 word2vec = load_word2vec(w2v_path)
-elmo = ELMoEmbeddings('original')
+elmo = ELMoEmbeddings('large')
+bert = TransformerWordEmbeddings('bert-large-cased')
+flair = StackedEmbeddings([WordEmbeddings('glove'), FlairEmbeddings('news-forward'),FlairEmbeddings('news-backward')])
+elmo_bert = StackedEmbeddings([elmo, bert])
+
+print("Loaded Resources")
 
 benchmarks = [("AVG-W2V", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False)),
               ("AVG-ELMO", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False)),
+              ("AVG-BERT", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False)),
+              ("AVG-FLAIR", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False)),
+              ("AVG-ELMO⊕BERT", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False)),
+
               ("AVG-W2V-STOP", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True)),
               ("AVG-ELMO-STOP", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True)),
+              ("AVG-BERT-STOP", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True)),
+              ("AVG-FLAIR-STOP", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True)),
+              ("AVG-ELMO⊕BERT-STOP", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=True)),
+
               ("AVG-W2V-TFIDF", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False, doc_freqs=doc_frequency)),
               ("AVG-ELMO-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False, doc_freqs=doc_frequency)),
+              ("AVG-BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False, doc_freqs=doc_frequency)),
+              ("AVG-FLAIR-TFIDF", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False, doc_freqs=doc_frequency)),
+              ("AVG-ELMO⊕BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False, doc_freqs=doc_frequency)),
+
               ("AVG-W2V-TFIDF-STOP",ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True, doc_freqs=doc_frequency)),
-              ("AVG-ELMO-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True, doc_freqs=doc_frequency))]
+              ("AVG-ELMO-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True, doc_freqs=doc_frequency)),
+              ("AVG-BERT-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True, doc_freqs=doc_frequency)),
+              ("AVG-FLAIR-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True, doc_freqs=doc_frequency)),
+              ("AVG-ELMO⊕BERT-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=True, doc_freqs=doc_frequency))]
 
 data = normalize(sick_test, ["sim"])
 
@@ -49,7 +70,7 @@ for benchmark in benchmarks:
     ax = data.plot(kind='scatter', x='id', y='sim', color='DarkBlue', label='Similarity', title=topic)
     data.plot(kind='scatter', x='id', y='predicted_sim', color='DarkGreen', label='Predicted Similarity',
                     ax=ax);
-    ax.text(1500, 0, textstr, fontsize=12)
+    ax.text(1000, 0, textstr, fontsize=8)
     fig = ax.get_figure()
     fig.savefig(os.path.join(IMAGE_PATH, topic+".png"))
     print(topic)
