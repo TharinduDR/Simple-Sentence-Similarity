@@ -41,6 +41,9 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
         tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
 
+        print(tokens1)
+        print(tokens2)
+
         embeddings_map1 = {}
         embeddings_map2 = {}
 
@@ -49,6 +52,9 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
 
         for token in flair_sent2:
             embeddings_map2[token.text] = np.array(token.embedding.data.tolist())
+
+        print(embeddings_map1)
+        print(embeddings_map2)
 
         if len(tokens1) == 0 or len(tokens2) == 0:
             sims.append(0)
