@@ -29,7 +29,7 @@ quora_train, quora_test = train_test_split(quora_data_cleaned, test_size=0.2, ra
 
 frequency = load_frequencies("data/frequencies/frequencies.tsv")
 doc_frequency = load_doc_frequencies("data/frequencies/doc_frequencies.tsv")
-word2vec = load_word2vec(w2v_path)
+# word2vec = load_word2vec(w2v_path)
 elmo = ELMoEmbeddings('large')
 # bert = TransformerWordEmbeddings('bert-large-cased')
 # flair = StackedEmbeddings([WordEmbeddings('glove'), FlairEmbeddings('news-forward'),FlairEmbeddings('news-backward')])
@@ -37,25 +37,26 @@ elmo = ELMoEmbeddings('large')
 
 print("Loaded Resources")
 
-benchmarks = [("AVG-W2V", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False)),
+benchmarks = [
+                # ("AVG-W2V", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False)),
               ("AVG-ELMO", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False)),
               # ("AVG-BERT", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False)),
               # ("AVG-FLAIR", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False)),
               # ("AVG-ELMO⊕BERT", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False)),
 
-              ("AVG-W2V-STOP", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True)),
+              # ("AVG-W2V-STOP", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True)),
               ("AVG-ELMO-STOP", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True)),
               # ("AVG-BERT-STOP", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True)),
               # ("AVG-FLAIR-STOP", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True)),
               # ("AVG-ELMO⊕BERT-STOP", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=True)),
 
-              ("AVG-W2V-TFIDF", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False, doc_freqs=doc_frequency)),
+              # ("AVG-W2V-TFIDF", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False, doc_freqs=doc_frequency)),
               ("AVG-ELMO-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-FLAIR-TFIDF", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-ELMO⊕BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False, doc_freqs=doc_frequency)),
 
-              ("AVG-W2V-TFIDF-STOP",ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True, doc_freqs=doc_frequency)),
+              # ("AVG-W2V-TFIDF-STOP",ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True, doc_freqs=doc_frequency)),
               ("AVG-ELMO-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True, doc_freqs=doc_frequency))
               # ("AVG-BERT-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True, doc_freqs=doc_frequency)),
               # ("AVG-FLAIR-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True, doc_freqs=doc_frequency)),
