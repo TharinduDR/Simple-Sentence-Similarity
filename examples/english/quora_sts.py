@@ -56,7 +56,7 @@ for (sent1, sent2) in zip(sentences_1, sentences_2):
 for x in tqdm(batch(flair_sentences_1, 100), total=int(len(flair_sentences_1) / 100)):
     elmo.embed(x)
 
-for x in tqdm(batch(flair_sentences_2, 100), total=int(len(flair_sentences_2) / 100)):
+for x in tqdm(batch(flair_sentences_2, 8), total=int(len(flair_sentences_2) / 8)):
     elmo.embed(x)
 
 print("Loaded Resources")
