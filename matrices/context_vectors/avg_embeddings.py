@@ -4,6 +4,18 @@ from collections import Counter
 import numpy as np
 from flair.data import Sentence
 from sklearn.metrics.pairwise import cosine_similarity
+from tqdm import tqdm
+
+
+def batch(iterable, n = 1):
+    current_batch = []
+    for item in iterable:
+        current_batch.append(item)
+        if len(current_batch) == n:
+            yield current_batch
+            current_batch = []
+    if current_batch:
+        yield current_batch
 
 
 def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=False, doc_freqs=None):
@@ -22,6 +34,12 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
 
         flair_sentences_1.append(flair_sent1)
         flair_sentences_2.append(flair_sent2)
+
+    for x in tqdm(batch(flair_sentences_1, 1024)):
+        model.embed(x)
+
+    for x in tqdm(batch(flair_sentences_2, 1024)):
+        model.embed(x)
 
     model.embed(flair_sentences_1)
     model.embed(flair_sentences_2)
