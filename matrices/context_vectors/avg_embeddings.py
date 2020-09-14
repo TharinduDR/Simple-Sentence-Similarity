@@ -6,43 +6,36 @@ from flair.data import Sentence
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 
-
-def batch(iterable, n = 1):
-    current_batch = []
-    for item in iterable:
-        current_batch.append(item)
-        if len(current_batch) == n:
-            yield current_batch
-            current_batch = []
-    if current_batch:
-        yield current_batch
+from utility.processing import batch
 
 
-def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=False, doc_freqs=None):
+def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=False, doc_freqs=None, flair_sentences_1=None, flair_sentences_2=None):
     if doc_freqs is not None:
         N = doc_freqs["NUM_DOCS"]
 
-    flair_sentences_1 = []
-    flair_sentences_2 = []
+    if flair_sentences_1 is None or flair_sentences_2 is None:
 
-    for (sent1, sent2) in zip(sentences1, sentences2):
-        flair_tokens1 = sent1.tokens
-        flair_tokens2 = sent2.tokens
+        flair_sentences_1 = []
+        flair_sentences_2 = []
 
-        flair_sent1 = Sentence(" ".join(flair_tokens1))
-        flair_sent2 = Sentence(" ".join(flair_tokens2))
+        for (sent1, sent2) in zip(sentences1, sentences2):
+            flair_tokens1 = sent1.tokens
+            flair_tokens2 = sent2.tokens
 
-        flair_sentences_1.append(flair_sent1)
-        flair_sentences_2.append(flair_sent2)
+            flair_sent1 = Sentence(" ".join(flair_tokens1))
+            flair_sent2 = Sentence(" ".join(flair_tokens2))
 
-    for x in tqdm(batch(flair_sentences_1, 128), total=int(len(flair_sentences_1)/128)):
-        model.embed(x)
+            flair_sentences_1.append(flair_sent1)
+            flair_sentences_2.append(flair_sent2)
 
-    for x in tqdm(batch(flair_sentences_2, 128), total=int(len(flair_sentences_2)/128)):
-        model.embed(x)
+        for x in tqdm(batch(flair_sentences_1, 100), total=int(len(flair_sentences_1)/100)):
+            model.embed(x)
 
-    model.embed(flair_sentences_1)
-    model.embed(flair_sentences_2)
+        for x in tqdm(batch(flair_sentences_2, 100), total=int(len(flair_sentences_2)/100)):
+            model.embed(x)
+
+        # model.embed(flair_sentences_1)
+        # model.embed(flair_sentences_2)
 
     sims = []
     for (sent1, sent2, flair_sent1, flair_sent2) in zip(sentences1, sentences2, flair_sentences_1, flair_sentences_2):
