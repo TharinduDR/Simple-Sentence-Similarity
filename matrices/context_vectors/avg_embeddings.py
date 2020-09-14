@@ -35,10 +35,10 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         flair_sentences_1.append(flair_sent1)
         flair_sentences_2.append(flair_sent2)
 
-    for x in tqdm(batch(flair_sentences_1, 100), total=int(len(flair_sentences_1)/100)):
+    for x in tqdm(batch(flair_sentences_1, 128), total=int(len(flair_sentences_1)/128)):
         model.embed(x)
 
-    for x in tqdm(batch(flair_sentences_2, 100), total=int(len(flair_sentences_2)/100)):
+    for x in tqdm(batch(flair_sentences_2, 128), total=int(len(flair_sentences_2)/128)):
         model.embed(x)
 
     model.embed(flair_sentences_1)
