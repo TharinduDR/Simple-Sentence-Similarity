@@ -34,26 +34,12 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         for x in tqdm(batch(flair_sentences_2, 100), total=int(len(flair_sentences_2)/100)):
             model.embed(x)
 
-        # model.embed(flair_sentences_1)
-        # model.embed(flair_sentences_2)
 
     sims = []
     for (sent1, sent2, flair_sent1, flair_sent2) in zip(sentences1, sentences2, flair_sentences_1, flair_sentences_2):
 
         tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
         tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
-
-        # flair_tokens1 = sent1.tokens
-        # flair_tokens2 = sent2.tokens
-        #
-        # flair_sent1 = Sentence(" ".join(flair_tokens1))
-        # flair_sent2 = Sentence(" ".join(flair_tokens2))
-
-        # print("sent_1 is " + (" ".join(tokens1)))
-        # print("sent_2 is " + (" ".join(tokens2)))
-
-        # model.embed(flair_sent1)
-        # model.embed(flair_sent2)
 
         embeddings_map1 = {}
         embeddings_map2 = {}
@@ -82,7 +68,7 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
         # print(embedding1)
         # print(embedding2)
 
-        if np.isnan(embedding1).any() or np.isnan(embedding2).any() or (len(embedding1) != len(embedding2)):
+        if np.isnan(embedding1).any() or np.isnan(embedding2).any():
             sims.append(0)
             continue
 
