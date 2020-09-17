@@ -40,53 +40,29 @@ elmo = ELMoEmbeddings('large')
 # flair = StackedEmbeddings([WordEmbeddings('glove'), FlairEmbeddings('news-forward'),FlairEmbeddings('news-backward')])
 # elmo_bert = StackedEmbeddings([elmo, bert])
 
-sentences_1 = quora_test['sent_1'].tolist()
-sentences_2 = quora_test['sent_2'].tolist()
-
-flair_sentences_1 = []
-flair_sentences_2 = []
-
-for (sent1, sent2) in zip(sentences_1, sentences_2):
-
-    flair_sent1 = Sentence(sent1)
-    flair_sent2 = Sentence(sent2)
-
-    flair_sentences_1.append(flair_sent1)
-    flair_sentences_2.append(flair_sent2)
-
-for x in tqdm(batch(flair_sentences_1, 100), total=int(len(flair_sentences_1) / 100)):
-    elmo.embed(x)
-
-for x in tqdm(batch(flair_sentences_2, 8), total=int(len(flair_sentences_2) / 8)):
-    elmo.embed(x)
-
 print("Loaded Resources")
 
 benchmarks = [
                 # ("AVG-W2V", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False)),
-              ("AVG-ELMO", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False,
-                                      flair_sentences_1=flair_sentences_1, flair_sentences_2=flair_sentences_2)),
+              ("AVG-ELMO", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False)),
               # ("AVG-BERT", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False)),
               # ("AVG-FLAIR", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False)),
               # ("AVG-ELMO⊕BERT", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False)),
 
               # ("AVG-W2V-STOP", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True)),
-              ("AVG-ELMO-STOP", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True,
-                                           flair_sentences_1=flair_sentences_1, flair_sentences_2=flair_sentences_2)),
+              ("AVG-ELMO-STOP", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True)),
               # ("AVG-BERT-STOP", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True)),
               # ("AVG-FLAIR-STOP", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True)),
               # ("AVG-ELMO⊕BERT-STOP", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=True)),
 
               # ("AVG-W2V-TFIDF", ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=False, doc_freqs=doc_frequency)),
-              ("AVG-ELMO-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False, doc_freqs=doc_frequency,
-                                            flair_sentences_1=flair_sentences_1, flair_sentences_2=flair_sentences_2)),
+              ("AVG-ELMO-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-FLAIR-TFIDF", ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=False, doc_freqs=doc_frequency)),
               # ("AVG-ELMO⊕BERT-TFIDF", ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=False, doc_freqs=doc_frequency)),
 
               # ("AVG-W2V-TFIDF-STOP",ft.partial(run_avg_benchmark, model=word2vec, use_stoplist=True, doc_freqs=doc_frequency)),
-              ("AVG-ELMO-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True, doc_freqs=doc_frequency,
-                                                flair_sentences_1=flair_sentences_1, flair_sentences_2=flair_sentences_2))
+              ("AVG-ELMO-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo, use_stoplist=True, doc_freqs=doc_frequency))
               # ("AVG-BERT-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=bert, use_stoplist=True, doc_freqs=doc_frequency)),
               # ("AVG-FLAIR-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=flair, use_stoplist=True, doc_freqs=doc_frequency)),
               # ("AVG-ELMO⊕BERT-TFIDF-STOP",ft.partial(run_context_avg_benchmark, model=elmo_bert, use_stoplist=True, doc_freqs=doc_frequency))

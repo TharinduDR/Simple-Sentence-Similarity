@@ -6,43 +6,25 @@ from flair.data import Sentence
 from sklearn.metrics.pairwise import cosine_similarity
 from tqdm import tqdm
 
-from utility.processing import batch
 
-
-def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=False, doc_freqs=None, flair_sentences_1=None, flair_sentences_2=None):
+def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=False, doc_freqs=None):
     if doc_freqs is not None:
         N = doc_freqs["NUM_DOCS"]
 
-    if flair_sentences_1 is None or flair_sentences_2 is None:
-
-        flair_sentences_1 = []
-        flair_sentences_2 = []
-
-        for (sent1, sent2) in zip(sentences1, sentences2):
-            flair_tokens1 = sent1.tokens
-            flair_tokens2 = sent2.tokens
-
-            flair_sent1 = Sentence(" ".join(flair_tokens1))
-            flair_sent2 = Sentence(" ".join(flair_tokens2))
-
-            flair_sentences_1.append(flair_sent1)
-            flair_sentences_2.append(flair_sent2)
-
-        for x in tqdm(batch(flair_sentences_1, 100), total=int(len(flair_sentences_1)/100)):
-            model.embed(x)
-
-        for x in tqdm(batch(flair_sentences_2, 100), total=int(len(flair_sentences_2)/100)):
-            model.embed(x)
-
-
     sims = []
-    for (sent1, sent2, flair_sent1, flair_sent2) in zip(sentences1, sentences2, flair_sentences_1, flair_sentences_2):
+    for (sent1, sent2) in tqdm(zip(sentences1, sentences2), total=len(sentences1)):
 
         tokens1 = sent1.tokens_without_stop if use_stoplist else sent1.tokens
         tokens2 = sent2.tokens_without_stop if use_stoplist else sent2.tokens
 
-        print(tokens1)
-        print(tokens2)
+        flair_tokens1 = sent1.tokens
+        flair_tokens2 = sent2.tokens
+
+        flair_sent1 = Sentence(" ".join(flair_tokens1))
+        flair_sent2 = Sentence(" ".join(flair_tokens2))
+
+        model.embed(flair_sent1)
+        model.embed(flair_sent2)
 
         embeddings_map1 = {}
         embeddings_map2 = {}
@@ -52,9 +34,6 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
 
         for token in flair_sent2:
             embeddings_map2[token.text] = np.array(token.embedding.data.tolist())
-
-        print(embeddings_map1)
-        print(embeddings_map2)
 
         if len(tokens1) == 0 or len(tokens2) == 0:
             sims.append(0)
@@ -70,13 +49,6 @@ def run_context_avg_benchmark(sentences1, sentences2, model=None, use_stoplist=F
 
         embedding1 = np.average([embeddings_map1[token] for token in tokfreqs1 if token in embeddings_map1], axis=0, weights=weights1).reshape(1, -1)
         embedding2 = np.average([embeddings_map2[token] for token in tokfreqs2 if token in embeddings_map2], axis=0, weights=weights2).reshape(1, -1)
-
-        # print(embedding1)
-        # print(embedding2)
-
-        if np.isnan(embedding1).any() or np.isnan(embedding2).any():
-            sims.append(0)
-            continue
 
         sim = cosine_similarity(embedding1, embedding2)[0][0]
         sims.append(sim)
