@@ -28,7 +28,7 @@ quora_data = load_quora_dataset("/content/drive/My Drive/Simple-Sentence-Similar
 
 quora_data_cleaned = quora_data[(quora_data['sent_1'].str.split().str.len() > 2) &
                                 (quora_data['sent_2'].str.split().str.len() > 2)]
-quora_train, quora_test = train_test_split(quora_data_cleaned, test_size=0.1, random_state=777)
+quora_train, quora_test = train_test_split(quora_data_cleaned, test_size=0.2, random_state=777)
 
 
 frequency = load_frequencies("data/frequencies/frequencies.tsv")
