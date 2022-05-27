@@ -1,8 +1,11 @@
 import logging
 
+import numpy as np
 from flair.data import Sentence
 from flair.embeddings import StackedEmbeddings, WordEmbeddings, CharacterEmbeddings, TransformerWordEmbeddings, \
     ELMoEmbeddings
+from numpy import dot
+from numpy.linalg import norm
 from tqdm import tqdm
 
 from simple_sts.model_args import WordEmbeddingSTSArgs
@@ -38,6 +41,8 @@ class WordEmbeddingAverageSTSMethod:
 
     def predict(self, to_predict, batch_size=32):
 
+        sims = []
+
         sentences_1 = list(zip(*to_predict))[0]
         sentences_2 = list(zip(*to_predict))[1]
 
@@ -55,10 +60,10 @@ class WordEmbeddingAverageSTSMethod:
                               len(processed_sentences_1 + processed_sentences_2) % batch_size > 0)):
             self.embedding_model.embed(x)
 
-        # for x2 in tqdm(batch(processed_sentences_2, batch_size), total=len(batch(processed_sentences_2, batch_size))):
-        #     self.embedding_model.embed(x2)
+        for embed_sentence_1, embed_sentence_2 in zip(processed_sentences_1, processed_sentences_2):
+            embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1], axis=0)
+            embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2], axis=0)
+            cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
+            sims.append(cos_sim)
 
-        # self.embedding_model.embed(processed_sentences_2)
-
-        embeddings_1 = []
-        embeddings_2 = []
+        return sims
