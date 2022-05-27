@@ -13,7 +13,7 @@ for index, row in sick_test.iterrows():
 
 model_args = WordEmbeddingSTSArgs()
 model_args.embedding_models = {"transformer": "bert-base-uncased",
-                               "elmo": "small"}
+                               "word": "glove"}
 
 model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 
