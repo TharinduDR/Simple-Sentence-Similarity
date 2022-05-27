@@ -25,7 +25,7 @@ class WordEmbeddingAverageSTSMethod:
                 embedding_models.append(TransformerWordEmbeddings(model_name))
 
         if len(embedding_models) > 1:
-            self.embedding_model = StackedEmbeddings[embedding_models]
+            self.embedding_model = StackedEmbeddings(embedding_models)
         elif len(embedding_models) == 1:
             self.embedding_model = embedding_models[0]
         else:
