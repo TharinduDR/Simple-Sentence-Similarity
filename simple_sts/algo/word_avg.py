@@ -3,6 +3,7 @@ import logging
 from flair.data import Sentence
 from flair.embeddings import StackedEmbeddings, WordEmbeddings, CharacterEmbeddings, TransformerWordEmbeddings, \
     ELMoEmbeddings
+from tqdm import tqdm
 
 from simple_sts.model_args import WordEmbeddingSTSArgs
 from simple_sts.util import batch
@@ -47,10 +48,10 @@ class WordEmbeddingAverageSTSMethod:
             processed_sentences_1.append(Sentence(sentence_1))
             processed_sentences_2.append(Sentence(sentence_2))
 
-        for x1 in batch(processed_sentences_1, batch_size):
+        for x1 in tqdm(batch(processed_sentences_1, batch_size)):
             self.embedding_model.embed(x1)
 
-        for x2 in batch(processed_sentences_2, batch_size):
+        for x2 in tqdm(batch(processed_sentences_2, batch_size)):
             self.embedding_model.embed(x2)
 
         # self.embedding_model.embed(processed_sentences_2)

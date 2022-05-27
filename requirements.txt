@@ -1,3 +1,4 @@
 pandas
 flair
 allennlp
+tqdm
