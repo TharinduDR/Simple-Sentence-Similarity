@@ -48,11 +48,14 @@ class WordEmbeddingAverageSTSMethod:
             processed_sentences_1.append(Sentence(sentence_1))
             processed_sentences_2.append(Sentence(sentence_2))
 
-        for x1 in tqdm(batch(processed_sentences_1, batch_size)):
-            self.embedding_model.embed(x1)
+        logger.info("Embedding sentences ")
 
-        for x2 in tqdm(batch(processed_sentences_2, batch_size)):
-            self.embedding_model.embed(x2)
+        for x in tqdm(batch(processed_sentences_1 + processed_sentences_2, batch_size),
+                      total=len(batch(processed_sentences_1 + processed_sentences_2, batch_size))):
+            self.embedding_model.embed(x)
+
+        # for x2 in tqdm(batch(processed_sentences_2, batch_size), total=len(batch(processed_sentences_2, batch_size))):
+        #     self.embedding_model.embed(x2)
 
         # self.embedding_model.embed(processed_sentences_2)
 
