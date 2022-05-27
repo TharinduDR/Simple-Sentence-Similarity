@@ -18,4 +18,5 @@ model_args.embedding_models = {"transformer": "bert-base-uncased",
 model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 
 sims = model.predict(to_predit)
-print(sims)
+print(len(to_predit))
+print(len(sims))
