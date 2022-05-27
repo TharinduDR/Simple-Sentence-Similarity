@@ -1,2 +1,3 @@
 pandas
 flair
+allennlp
