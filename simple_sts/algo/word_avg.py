@@ -45,8 +45,8 @@ class WordEmbeddingAverageSTSMethod:
             processed_sentences_1.append(Sentence(sentence_1))
             processed_sentences_2.append(Sentence(sentence_2))
 
-        self.embedding_model.encode(sentences_1)
-        self.embedding_model.encode(sentences_2)
+        self.embedding_model.embed(processed_sentences_1)
+        self.embedding_model.embed(processed_sentences_2)
 
         embeddings_1 = []
         embeddings_2 = []
