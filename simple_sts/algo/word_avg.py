@@ -51,7 +51,8 @@ class WordEmbeddingAverageSTSMethod:
         logger.info("Embedding sentences ")
 
         for x in tqdm(batch(processed_sentences_1 + processed_sentences_2, batch_size),
-                      total=len(batch(processed_sentences_1 + processed_sentences_2, batch_size))):
+                      total=int(len(processed_sentences_1 + processed_sentences_2) / batch_size) + (
+                              len(processed_sentences_1 + processed_sentences_2) % batch_size > 0)):
             self.embedding_model.embed(x)
 
         # for x2 in tqdm(batch(processed_sentences_2, batch_size), total=len(batch(processed_sentences_2, batch_size))):
