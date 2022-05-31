@@ -19,6 +19,8 @@ class WordEmbeddingAverageSTSMethod:
 
         self.model_args = model_args
 
+        logging.info("Loading models ")
+
         embedding_models = []
         for model_type, model_name in self.model_args.embedding_models.items():
             if model_type == "word":
@@ -53,11 +55,9 @@ class WordEmbeddingAverageSTSMethod:
             processed_sentences_1.append(Sentence(sentence_1))
             processed_sentences_2.append(Sentence(sentence_2))
 
-        logger.info("Embedding sentences ")
-
         for x in tqdm(batch(processed_sentences_1 + processed_sentences_2, batch_size),
                       total=int(len(processed_sentences_1 + processed_sentences_2) / batch_size) + (
-                              len(processed_sentences_1 + processed_sentences_2) % batch_size > 0)):
+                              len(processed_sentences_1 + processed_sentences_2) % batch_size > 0), desc="Embedding sentences "):
             self.embedding_model.embed(x)
 
         for embed_sentence_1, embed_sentence_2 in zip(processed_sentences_1, processed_sentences_2):
