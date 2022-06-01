@@ -23,7 +23,7 @@ class WordEmbeddingAverageSTSMethod:
         logging.info("Loading models ")
 
         embedding_models = []
-        for model_type, model_name in self.model_args.embedding_models.items():
+        for model_type, model_name in self.model_args.embedding_models:
             if model_type == "word":
                 embedding_models.append(WordEmbeddings(model_name))
             elif model_type == "char":

@@ -1,5 +1,4 @@
 from dataclasses import dataclass, field
-from typing import Dict
 
 
 @dataclass
@@ -9,6 +8,6 @@ class SimpleSTSArgs:
 
 @dataclass
 class WordEmbeddingSTSArgs(SimpleSTSArgs):
-    embedding_models: Dict[str, str] = field(default_factory=dict)
+    embedding_models: list[str, str] = field(default_factory=list)
     remove_stopwords: bool = False
     language: str = "en"
