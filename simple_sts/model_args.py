@@ -8,6 +8,6 @@ class SimpleSTSArgs:
 
 @dataclass
 class WordEmbeddingSTSArgs(SimpleSTSArgs):
-    embedding_models: list[str, str] = field(default_factory=list)
+    embedding_models: list = field(default_factory=list)
     remove_stopwords: bool = False
     language: str = "en"
