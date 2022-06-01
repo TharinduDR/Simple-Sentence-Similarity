@@ -17,7 +17,7 @@ for index, row in sick_test.iterrows():
 
 model_args = WordEmbeddingSTSArgs()
 model_args.embedding_models = [["transformer", "bert-large-cased"],
-                               ["word", "glove"]]
+                               ["transformer", "xlnet-large-cased"]]
 model_args.language = "en"
 model_args.remove_stopwords = True
 
