@@ -1,6 +1,7 @@
 import pandas as pd
 
 from examples.evaluation import pearson_corr, spearman_corr, rmse
+from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
 from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
 from simple_sts.model_args import WordEmbeddingSTSArgs
 
@@ -20,7 +21,8 @@ model_args.embedding_models = {"transformer": "bert-base-uncased",
 model_args.language = "en"
 model_args.remove_stopwords = True
 
-model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+model = WordEmbeddingSIFSTSMethod(model_args=model_args)
 
 pred_sims = model.predict(to_predit)
 print("Pearson correlation ", pearson_corr(sims, pred_sims))
