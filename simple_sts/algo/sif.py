@@ -87,7 +87,7 @@ class WordEmbeddingSIFSTSMethod:
             embeddings.append(embedding2)
 
         logging.info("Removing first principle component")
-        processed_embeddings = _remove_first_principal_component(embeddings)
+        processed_embeddings = _remove_first_principal_component(np.array(embeddings))
         processed_embeddings_1 = processed_embeddings[1::2]
         processed_embeddings_2 = processed_embeddings[0::2]
 
