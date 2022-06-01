@@ -60,7 +60,7 @@ class WordEmbeddingAverageSTSMethod:
                               len(processed_sentences_1 + processed_sentences_2) % batch_size > 0), desc="Embedding sentences "):
             self.embedding_model.embed(x)
 
-        for embed_sentence_1, embed_sentence_2 in zip(processed_sentences_1, processed_sentences_2):
+        for embed_sentence_1, embed_sentence_2 in tqdm(zip(processed_sentences_1, processed_sentences_2), total=len(processed_sentences_1), desc="Calculating similarity "):
             embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1], axis=0)
             embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2], axis=0)
             cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
