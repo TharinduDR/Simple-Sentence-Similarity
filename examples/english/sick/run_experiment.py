@@ -16,10 +16,10 @@ for index, row in sick_test.iterrows():
     sims.append(row['relatedness_score'])
 
 model_args = WordEmbeddingSTSArgs()
-model_args.embedding_models = {"transformer": "bert-base-uncased",
+model_args.embedding_models = {"transformer": "bert-large-cased",
                                "word": "glove"}
 model_args.language = "en"
-model_args.remove_stopwords = False
+model_args.remove_stopwords = True
 
 # model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 model = WordEmbeddingSIFSTSMethod(model_args=model_args)
