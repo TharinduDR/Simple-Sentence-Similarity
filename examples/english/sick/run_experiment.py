@@ -16,8 +16,7 @@ for index, row in sick_test.iterrows():
     sims.append(row['relatedness_score'])
 
 model_args = WordEmbeddingSTSArgs()
-model_args.embedding_models = [["transformer", "bert-large-cased"],
-                               ["transformer", "xlnet-large-cased"]]
+model_args.embedding_models = [["transformer", "bert-large-cased"]]
 model_args.language = "en"
 model_args.remove_stopwords = True
 
