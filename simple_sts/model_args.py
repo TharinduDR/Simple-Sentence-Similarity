@@ -10,3 +10,5 @@ class SimpleSTSArgs:
 @dataclass
 class WordEmbeddingSTSArgs(SimpleSTSArgs):
     embedding_models: Dict[str, str] = field(default_factory=dict)
+    remove_stopwords: bool = False
+    language: str = "en"
