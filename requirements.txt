@@ -2,3 +2,4 @@ pandas
 flair
 allennlp
 tqdm
+stop_words
