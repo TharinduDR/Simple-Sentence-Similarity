@@ -18,7 +18,7 @@ model_args = WordEmbeddingSTSArgs()
 model_args.embedding_models = {"transformer": "bert-base-uncased",
                                "word": "glove"}
 model_args.language = "en"
-model_args.remove_stopwords = False
+model_args.remove_stopwords = True
 
 model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 
