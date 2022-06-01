@@ -20,7 +20,6 @@ class WordEmbeddingAverageSTSMethod:
     def __init__(self, model_args: WordEmbeddingSTSArgs):
 
         self.model_args = model_args
-        self.stop_words = []
         logging.info("Loading models ")
 
         embedding_models = []
@@ -72,16 +71,16 @@ class WordEmbeddingAverageSTSMethod:
         print(self.model_args.remove_stopwords)
         for embed_sentence_1, embed_sentence_2 in tqdm(zip(processed_sentences_1, processed_sentences_2), total=len(processed_sentences_1), desc="Calculating similarity "):
 
-            if not self.model_args.remove_stopwords:
-                embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1], axis=0)
-                embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2], axis=0)
-                cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
-                sims.append(cos_sim)
+            # if not self.model_args.remove_stopwords:
+            #     embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1], axis=0)
+            #     embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2], axis=0)
+            #     cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
+            #     sims.append(cos_sim)
 
-            else:
-                embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1 if token1.text not in self.stop_words], axis=0)
-                embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2 if token2.text not in self.stop_words], axis=0)
-                cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
-                sims.append(cos_sim)
+
+            embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1 if self.model_args.remove_stopwords and token1.text not in self.stop_words], axis=0)
+            embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2 if self.model_args.remove_stopwords and token2.text not in self.stop_words], axis=0)
+            cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
+            sims.append(cos_sim)
 
         return sims
