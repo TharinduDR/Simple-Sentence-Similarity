@@ -83,6 +83,8 @@ class WordEmbeddingSIFSTSMethod:
             embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1 if self.model_args.remove_stopwords and token1.text not in self.stop_words], axis=0)
             embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2 if self.model_args.remove_stopwords and token2.text not in self.stop_words], axis=0)
 
+            print(embedding1)
+
             embeddings.append(embedding1)
             embeddings.append(embedding2)
 
