@@ -78,8 +78,8 @@ class WordEmbeddingAverageSTSMethod:
                 sims.append(cos_sim)
 
             else:
-                embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1 if token1 is not in self.stop_words], axis=0)
-                embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2 if token2 is not in self.stop_words], axis=0)
+                embedding1 = np.average([np.array(token1.embedding.data.tolist()) for token1 in embed_sentence_1 if token1 not in self.stop_words], axis=0)
+                embedding2 = np.average([np.array(token2.embedding.data.tolist()) for token2 in embed_sentence_2 if token2 not in self.stop_words], axis=0)
                 cos_sim = dot(embedding1, embedding2) / (norm(embedding1) * norm(embedding2))
                 sims.append(cos_sim)
 
