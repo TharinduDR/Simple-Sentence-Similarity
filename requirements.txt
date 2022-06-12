@@ -3,3 +3,5 @@ flair
 allennlp
 tqdm
 stop_words
+tensorflow_text
+tensorflow_hub
