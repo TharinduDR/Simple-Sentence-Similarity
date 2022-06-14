@@ -1,6 +1,7 @@
 import pandas as pd
 
 from examples.evaluation import pearson_corr, spearman_corr, rmse
+from simple_sts.algo.labse import LaBSESTSMethod
 from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
 from simple_sts.algo.use import UniversalSentenceEncoderSTSMethod
 from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
@@ -30,6 +31,7 @@ print("Pearson correlation ", pearson_corr(sims, pred_sims))
 print("Spearman correlation ", spearman_corr(sims, pred_sims))
 print("RMSE ", rmse(sims, pred_sims))
 
+# -----------------------------------------------------------------------
 
 sentence_model_args = SentenceEmbeddingSTSArgs()
 sentence_model_args.embedding_model = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
@@ -43,3 +45,19 @@ pred_sims = model.predict(to_predit)
 print("Pearson correlation ", pearson_corr(sims, pred_sims))
 print("Spearman correlation ", spearman_corr(sims, pred_sims))
 print("RMSE ", rmse(sims, pred_sims))
+
+# -----------------------------------------------------------------------
+labse_model_args = SentenceEmbeddingSTSArgs()
+labse_model_args.embedding_model = "https://tfhub.dev/google/LaBSE/2"
+labse_model_args.language = "en"
+
+
+# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+model = LaBSESTSMethod(model_args=labse_model_args)
+
+pred_sims = model.predict(to_predit)
+print("Pearson correlation ", pearson_corr(sims, pred_sims))
+print("Spearman correlation ", spearman_corr(sims, pred_sims))
+print("RMSE ", rmse(sims, pred_sims))
+
+
