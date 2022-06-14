@@ -2,8 +2,9 @@ import pandas as pd
 
 from examples.evaluation import pearson_corr, spearman_corr, rmse
 from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
+from simple_sts.algo.use import UniversalSentenceEncoderSTSMethod
 from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
-from simple_sts.model_args import WordEmbeddingSTSArgs
+from simple_sts.model_args import WordEmbeddingSTSArgs, SentenceEmbeddingSTSArgs
 
 sick_test = pd.read_csv("examples/english/sick/data/SICK_test_annotated.txt", sep="\t")
 
@@ -23,6 +24,20 @@ model_args.remove_stopwords = True
 
 # model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 model = WordEmbeddingSIFSTSMethod(model_args=model_args)
+
+pred_sims = model.predict(to_predit)
+print("Pearson correlation ", pearson_corr(sims, pred_sims))
+print("Spearman correlation ", spearman_corr(sims, pred_sims))
+print("RMSE ", rmse(sims, pred_sims))
+
+
+sentence_model_args = SentenceEmbeddingSTSArgs()
+sentence_model_args.embedding_model = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+sentence_model_args.language = "en"
+
+
+# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+model = UniversalSentenceEncoderSTSMethod(model_args=sentence_model_args)
 
 pred_sims = model.predict(to_predit)
 print("Pearson correlation ", pearson_corr(sims, pred_sims))

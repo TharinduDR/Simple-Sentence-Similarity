@@ -1,10 +1,11 @@
 import logging
-import tensorflow_hub as hub
+
 import numpy as np
-import tensorflow_text
-from simple_sts.util import batch
+import tensorflow_hub as hub
+from tqdm import tqdm
 
 from simple_sts.model_args import SentenceEmbeddingSTSArgs
+from simple_sts.util import batch
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -26,18 +27,20 @@ class UniversalSentenceEncoderSTSMethod:
         embeddings_1 = []
         embeddings_2 = []
 
-        for x in batch(sentences_1, batch_size):
+        for x in tqdm(batch(sentences_1, batch_size), total=int(len(sentences_1) / batch_size) + (
+                len(sentences_1) % batch_size > 0), desc="Embedding list 1 "):
             temp = self.model(x)
             for embedding in temp:
                 embeddings_1.append(embedding.numpy())
 
-        for x in batch(sentences_2, batch_size):
+        for x in tqdm(batch(sentences_2, batch_size), total=int(len(sentences_2) / batch_size) + (
+                len(sentences_2) % batch_size > 0), desc="Embedding list 2 "):
             temp = self.model(x)
             for embedding in temp:
                 embeddings_2.append(embedding.numpy())
 
         for embedding_1, embedding_2 in zip(embeddings_1, embeddings_2):
-            cos_sim = np.inner(embedding_1, embedding_2)
-            sims.append(cos_sim)
+            sim = np.inner(embedding_1, embedding_2)
+            sims.append(sim)
 
         return sims
