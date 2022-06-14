@@ -2,6 +2,7 @@ import logging
 
 import numpy as np
 import tensorflow_hub as hub
+import tensorflow_text as text
 import tensorflow as tf
 from tqdm import tqdm
 
