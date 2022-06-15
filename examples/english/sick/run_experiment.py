@@ -35,7 +35,7 @@ print("RMSE ", rmse(sims, pred_sims))
 # -----------------------------------------------------------------------
 
 sentence_model_args = SentenceEmbeddingSTSArgs()
-sentence_model_args.embedding_model = "https://tfhub.dev/google/universal-sentence-encoder-large/5"
+sentence_model_args.embedding_model = "https://tfhub.dev/google/universal-sentence-encoder-multilingual-large/3"
 sentence_model_args.language = "en"
 
 
