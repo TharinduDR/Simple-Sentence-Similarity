@@ -20,7 +20,7 @@ def download_file(url, dest):
 
 
 def download_models(output_dir):
-    logger.info('Downloading models into {}', output_dir)
+    logger.info('Downloading models into {}'.format(output_dir))
 
     download_file('https://dl.fbaipublicfiles.com/laser/models/93langs.fcodes',
                   os.path.join(output_dir, '93langs.fcodes'))
@@ -37,7 +37,10 @@ class LASERSTSMethod:
         logging.info("Loading models ")
 
         output_dir = os.path.join(os.path.dirname(os.path.realpath(__file__)), 'data')
-        download_models(output_dir)
+
+        if not os.path.exists(output_dir):
+            os.makedirs(output_dir)
+            download_models(output_dir)
         self.embedding_model = Laser()
 
     def predict(self, to_predict, batch_size=32):
