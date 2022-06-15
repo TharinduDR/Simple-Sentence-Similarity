@@ -2,6 +2,7 @@ import pandas as pd
 
 from examples.evaluation import pearson_corr, spearman_corr, rmse
 from simple_sts.algo.labse import LaBSESTSMethod
+from simple_sts.algo.sbert import SentenceTransformerSTSMethod
 from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
 from simple_sts.algo.use import UniversalSentenceEncoderSTSMethod
 from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
@@ -54,6 +55,20 @@ labse_model_args.language = "en"
 
 # model = WordEmbeddingAverageSTSMethod(model_args=model_args)
 model = LaBSESTSMethod(model_args=labse_model_args)
+
+pred_sims = model.predict(to_predit)
+print("Pearson correlation ", pearson_corr(sims, pred_sims))
+print("Spearman correlation ", spearman_corr(sims, pred_sims))
+print("RMSE ", rmse(sims, pred_sims))
+
+# -----------------------------------------------------------------------
+sbert_model_args = SentenceEmbeddingSTSArgs()
+sbert_model_args.embedding_model = "distiluse-base-multilingual-cased"
+sbert_model_args.language = "en"
+
+
+# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+model = SentenceTransformerSTSMethod(model_args=sbert_model_args)
 
 pred_sims = model.predict(to_predit)
 print("Pearson correlation ", pearson_corr(sims, pred_sims))
