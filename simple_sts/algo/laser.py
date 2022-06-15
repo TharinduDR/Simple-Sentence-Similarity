@@ -41,7 +41,12 @@ class LASERSTSMethod:
         if not os.path.exists(output_dir):
             os.makedirs(output_dir)
             download_models(output_dir)
-        self.embedding_model = Laser()
+
+        DEFAULT_BPE_CODES_FILE = os.path.join(output_dir, '93langs.fcodes')
+        DEFAULT_BPE_VOCAB_FILE = os.path.join(output_dir, '93langs.fvocab')
+        DEFAULT_ENCODER_FILE = os.path.join(output_dir,
+                                            'bilstm.93langs.2018-12-26.pt')
+        self.embedding_model = Laser(DEFAULT_BPE_CODES_FILE, DEFAULT_BPE_VOCAB_FILE, DEFAULT_ENCODER_FILE)
 
     def predict(self, to_predict, batch_size=32):
         sims = []
