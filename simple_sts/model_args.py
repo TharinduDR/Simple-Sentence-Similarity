@@ -17,3 +17,4 @@ class WordEmbeddingSTSArgs(SimpleSTSArgs):
 class SentenceEmbeddingSTSArgs(SimpleSTSArgs):
     embedding_model: str = ""
     language: str = "en"
+

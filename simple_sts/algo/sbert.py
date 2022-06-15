@@ -1,22 +1,21 @@
 import logging
 
 import numpy as np
-import tensorflow_hub as hub
+from numpy.linalg import norm
+from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
 from simple_sts.model_args import SentenceEmbeddingSTSArgs
-from simple_sts.util import batch
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 
-class SBERTSTSMethod:
+class SentenceTransformerSTSMethod:
     def __init__(self, model_args: SentenceEmbeddingSTSArgs):
-
         self.model_args = model_args
         logging.info("Loading models ")
-        self.model = hub.load(self.model_args.embedding_model)
+        self.model = SentenceTransformer(model_args.embedding_model)
 
     def predict(self, to_predict, batch_size=32):
         sims = []
@@ -24,23 +23,12 @@ class SBERTSTSMethod:
         sentences_1 = list(zip(*to_predict))[0]
         sentences_2 = list(zip(*to_predict))[1]
 
-        embeddings_1 = []
-        embeddings_2 = []
-
-        for x in tqdm(batch(sentences_1, batch_size), total=int(len(sentences_1) / batch_size) + (
-                len(sentences_1) % batch_size > 0), desc="Embedding list 1 "):
-            temp = self.model(x)
-            for embedding in temp:
-                embeddings_1.append(embedding.numpy())
-
-        for x in tqdm(batch(sentences_2, batch_size), total=int(len(sentences_2) / batch_size) + (
-                len(sentences_2) % batch_size > 0), desc="Embedding list 2 "):
-            temp = self.model(x)
-            for embedding in temp:
-                embeddings_2.append(embedding.numpy())
+        embeddings_1 = self.model.encode(sentences_1, batch_size=batch_size, show_progress_bar=True)
+        embeddings_2 = self.model.encode(sentences_2, batch_size=batch_size, show_progress_bar=True)
 
         for embedding_1, embedding_2 in tqdm(zip(embeddings_1, embeddings_2), total=len(embeddings_1)):
-            sim = np.inner(embedding_1, embedding_2)
-            sims.append(sim)
+            cos_sim = np.dot(embedding_1, embedding_2) / (
+                    norm(embedding_1) * norm(embedding_2))
+            sims.append(cos_sim)
 
         return sims
