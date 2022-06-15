@@ -6,3 +6,4 @@ stop_words
 tensorflow_text
 tensorflow_hub
 sentence_transformers
+laserembeddings
