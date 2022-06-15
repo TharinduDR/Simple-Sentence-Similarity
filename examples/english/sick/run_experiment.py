@@ -48,18 +48,18 @@ for index, row in sick_test.iterrows():
 # print("RMSE ", rmse(sims, pred_sims))
 
 # -----------------------------------------------------------------------
-labse_model_args = SentenceEmbeddingSTSArgs()
-labse_model_args.embedding_model = "https://tfhub.dev/google/LaBSE/2"
-labse_model_args.language = "en"
+# labse_model_args = SentenceEmbeddingSTSArgs()
+# labse_model_args.embedding_model = "https://tfhub.dev/google/LaBSE/2"
+# labse_model_args.language = "en"
 
 
 # model = WordEmbeddingAverageSTSMethod(model_args=model_args)
-model = LaBSESTSMethod(model_args=labse_model_args)
-
-pred_sims = model.predict(to_predit)
-print("Pearson correlation ", pearson_corr(sims, pred_sims))
-print("Spearman correlation ", spearman_corr(sims, pred_sims))
-print("RMSE ", rmse(sims, pred_sims))
+# model = LaBSESTSMethod(model_args=labse_model_args)
+#
+# pred_sims = model.predict(to_predit)
+# print("Pearson correlation ", pearson_corr(sims, pred_sims))
+# print("Spearman correlation ", spearman_corr(sims, pred_sims))
+# print("RMSE ", rmse(sims, pred_sims))
 
 # -----------------------------------------------------------------------
 sbert_model_args = SentenceEmbeddingSTSArgs()
