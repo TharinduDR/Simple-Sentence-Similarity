@@ -1,4 +1,5 @@
 #  Simple Sentence Similarity
+We provide a collection of simple unsupervised semantic textual similarity methods to calculate semantic similarity between two sentences.
 
 ### References
 If you find this code useful in your research, please consider citing:
