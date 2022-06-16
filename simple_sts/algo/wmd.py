@@ -24,6 +24,9 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
+gensim_logger = logging.getLogger('gensim')
+gensim_logger.setLevel(logging.WARN)
+
 
 class WordMoversDistanceSTSMethod:
     def __init__(self, model_args: WordEmbeddingSTSArgs):
