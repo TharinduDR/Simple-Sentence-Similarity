@@ -1,4 +1,5 @@
 pandas
+numpy
 flair
 allennlp
 tqdm
