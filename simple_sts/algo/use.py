@@ -39,7 +39,7 @@ class UniversalSentenceEncoderSTSMethod:
             for embedding in temp:
                 embeddings_2.append(embedding.numpy())
 
-        for embedding_1, embedding_2 in tqdm(zip(embeddings_1, embeddings_2), total=len(embeddings_1)):
+        for embedding_1, embedding_2 in tqdm(zip(embeddings_1, embeddings_2), total=len(embeddings_1), desc="Calculating similarity "):
             sim = np.inner(embedding_1, embedding_2)
             sims.append(sim)
 

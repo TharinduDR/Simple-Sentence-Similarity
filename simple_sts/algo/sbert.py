@@ -26,7 +26,7 @@ class SentenceTransformerSTSMethod:
         embeddings_1 = self.model.encode(sentences_1, batch_size=batch_size, show_progress_bar=True)
         embeddings_2 = self.model.encode(sentences_2, batch_size=batch_size, show_progress_bar=True)
 
-        for embedding_1, embedding_2 in tqdm(zip(embeddings_1, embeddings_2), total=len(embeddings_1)):
+        for embedding_1, embedding_2 in tqdm(zip(embeddings_1, embeddings_2), total=len(embeddings_1), desc="Calculating similarity "):
             cos_sim = np.dot(embedding_1, embedding_2) / (
                     norm(embedding_1) * norm(embedding_2))
             sims.append(cos_sim)
