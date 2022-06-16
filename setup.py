@@ -21,16 +21,16 @@ setup(
     ],
     python_requires=">=3.6",
     install_requires=[
-        "pandas"
-        "numpy"
-        "flair"
-        "allennlp"
-        "tqdm"
-        "pyemd"
-        "stop_words"
-        "tensorflow_text"
-        "tensorflow_hub"
-        "sentence_transformers"
-        "laserembeddings"
+        "pandas",
+        "numpy",
+        "flair",
+        "allennlp",
+        "tqdm",
+        "pyemd",
+        "stop_words",
+        "tensorflow_text",
+        "tensorflow_hub",
+        "sentence_transformers",
+        "laserembeddings",
     ],
 )
