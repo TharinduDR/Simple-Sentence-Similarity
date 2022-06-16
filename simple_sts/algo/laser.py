@@ -49,7 +49,6 @@ class LASERSTSMethod:
         self.embedding_model = Laser(DEFAULT_BPE_CODES_FILE, DEFAULT_BPE_VOCAB_FILE, DEFAULT_ENCODER_FILE)
 
     def predict(self, to_predict, batch_size=32):
-        sims = []
 
         sentences_1 = list(zip(*to_predict))[0]
         sentences_2 = list(zip(*to_predict))[1]
@@ -60,13 +59,13 @@ class LASERSTSMethod:
 
         for x in tqdm(batch(sentences_1, batch_size), total=int(len(sentences_1) / batch_size) + (
                 len(sentences_1) % batch_size > 0), desc="Embedding list 1 "):
-            temp = self.embedding_model.embed_sentences(x, lang='en')
+            temp = self.embedding_model.embed_sentences(x, lang=self.model_args.language)
             for embedding in temp:
                 embeddings_1.append(embedding)
 
         for x in tqdm(batch(sentences_2, batch_size), total=int(len(sentences_2) / batch_size) + (
                 len(sentences_2) % batch_size > 0), desc="Embedding list 2 "):
-            temp = self.embedding_model.embed_sentences(x, lang='en')
+            temp = self.embedding_model.embed_sentences(x, lang=self.model_args.language)
             for embedding in temp:
                 embeddings_2.append(embedding)
 
