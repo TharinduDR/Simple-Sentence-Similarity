@@ -6,8 +6,8 @@ from numpy import dot
 from numpy.linalg import norm
 from tqdm import tqdm
 
-from simple_sts.model_args import SentenceEmbeddingSTSArgs
-from simple_sts.util import batch
+from simplests.model_args import SentenceEmbeddingSTSArgs
+from simplests.util import batch
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

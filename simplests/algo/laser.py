@@ -6,9 +6,9 @@ from laserembeddings import Laser
 from tqdm import tqdm
 from numpy.linalg import norm
 import numpy as np
-from simple_sts.util import batch
+from simplests.util import batch
 
-from simple_sts.model_args import SentenceEmbeddingSTSArgs
+from simplests.model_args import SentenceEmbeddingSTSArgs
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

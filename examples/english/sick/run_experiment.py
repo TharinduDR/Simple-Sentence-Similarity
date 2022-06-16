@@ -1,15 +1,15 @@
 import pandas as pd
 
 from examples.evaluation import pearson_corr, spearman_corr, rmse
-from simple_sts.algo.cls import TransformerCLSSTSMethod
-from simple_sts.algo.labse import LaBSESTSMethod
-from simple_sts.algo.laser import LASERSTSMethod
-from simple_sts.algo.sbert import SentenceTransformerSTSMethod
-from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
-from simple_sts.algo.use import UniversalSentenceEncoderSTSMethod
-from simple_sts.algo.wmd import WordMoversDistanceSTSMethod
-from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
-from simple_sts.model_args import WordEmbeddingSTSArgs, SentenceEmbeddingSTSArgs
+from simplests.algo.cls import TransformerCLSSTSMethod
+from simplests.algo.labse import LaBSESTSMethod
+from simplests.algo.laser import LASERSTSMethod
+from simplests.algo.sbert import SentenceTransformerSTSMethod
+from simplests.algo.sif import WordEmbeddingSIFSTSMethod
+from simplests.algo.use import UniversalSentenceEncoderSTSMethod
+from simplests.algo.wmd import WordMoversDistanceSTSMethod
+from simplests.algo.word_avg import WordEmbeddingAverageSTSMethod
+from simplests.model_args import WordEmbeddingSTSArgs, SentenceEmbeddingSTSArgs
 
 sick_test = pd.read_csv("examples/english/sick/data/SICK_test_annotated.txt", sep="\t")
 

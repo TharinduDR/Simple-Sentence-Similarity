@@ -9,8 +9,8 @@ from numpy.linalg import norm
 from tqdm import tqdm
 from sklearn.decomposition import TruncatedSVD
 
-from simple_sts.model_args import WordEmbeddingSTSArgs
-from simple_sts.util import batch
+from simplests.model_args import WordEmbeddingSTSArgs
+from simplests.util import batch
 from stop_words import get_stop_words
 
 logging.basicConfig(level=logging.INFO)

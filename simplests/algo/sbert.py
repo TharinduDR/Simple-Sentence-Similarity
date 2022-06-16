@@ -5,7 +5,7 @@ from numpy.linalg import norm
 from sentence_transformers import SentenceTransformer
 from tqdm import tqdm
 
-from simple_sts.model_args import SentenceEmbeddingSTSArgs
+from simplests.model_args import SentenceEmbeddingSTSArgs
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)

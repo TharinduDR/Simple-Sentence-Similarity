@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setup(
-    name="simple_sts",
+    name="simplests",
     version="2.0.0",
     author="Tharindu Ranasinghe",
     author_email="rhtdranasinghe@gmail.com",
