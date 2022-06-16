@@ -7,6 +7,7 @@ from simple_sts.algo.laser import LASERSTSMethod
 from simple_sts.algo.sbert import SentenceTransformerSTSMethod
 from simple_sts.algo.sif import WordEmbeddingSIFSTSMethod
 from simple_sts.algo.use import UniversalSentenceEncoderSTSMethod
+from simple_sts.algo.wmd import WordMoversDistanceSTSMethod
 from simple_sts.algo.word_avg import WordEmbeddingAverageSTSMethod
 from simple_sts.model_args import WordEmbeddingSTSArgs, SentenceEmbeddingSTSArgs
 
@@ -20,18 +21,27 @@ for index, row in sick_test.iterrows():
     to_predit.append([row['sentence_A'], row['sentence_B']])
     sims.append(row['relatedness_score'])
 
-# model_args = WordEmbeddingSTSArgs()
-# model_args.embedding_models = [["transformer", "bert-base-multilingual-cased"]]
-# model_args.language = "en"
-# model_args.remove_stopwords = True
-#
-# # model = WordEmbeddingAverageSTSMethod(model_args=model_args)
-# model = WordEmbeddingSIFSTSMethod(model_args=model_args)
-#
-# pred_sims = model.predict(to_predit)
-# print("Pearson correlation ", pearson_corr(sims, pred_sims))
-# print("Spearman correlation ", spearman_corr(sims, pred_sims))
-# print("RMSE ", rmse(sims, pred_sims))
+model_args = WordEmbeddingSTSArgs()
+model_args.embedding_models = [["transformer", "bert-base-multilingual-cased"]]
+model_args.language = "en"
+model_args.remove_stopwords = True
+
+# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
+model = WordEmbeddingSIFSTSMethod(model_args=model_args)
+
+pred_sims = model.predict(to_predit)
+print("Pearson correlation ", pearson_corr(sims, pred_sims))
+print("Spearman correlation ", spearman_corr(sims, pred_sims))
+print("RMSE ", rmse(sims, pred_sims))
+
+# -------------------------------------------------------------------------
+model = WordMoversDistanceSTSMethod(model_args=model_args)
+
+pred_sims = model.predict(to_predit)
+print("Pearson correlation ", pearson_corr(sims, pred_sims))
+print("Spearman correlation ", spearman_corr(sims, pred_sims))
+print("RMSE ", rmse(sims, pred_sims))
+
 #
 # # -----------------------------------------------------------------------
 #

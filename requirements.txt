@@ -2,6 +2,7 @@ pandas
 flair
 allennlp
 tqdm
+pyemd
 stop_words
 tensorflow_text
 tensorflow_hub
