@@ -3,7 +3,7 @@ import logging
 import numpy as np
 from flair.data import Sentence
 from flair.embeddings import StackedEmbeddings, WordEmbeddings, CharacterEmbeddings, TransformerWordEmbeddings, \
-    ELMoEmbeddings
+    ELMoEmbeddings, FastTextEmbeddings
 from numpy import dot
 from numpy.linalg import norm
 from tqdm import tqdm
@@ -41,6 +41,8 @@ class WordMoversDistanceSTSMethod:
         for model_type, model_name in self.model_args.embedding_models:
             if model_type == "word":
                 embedding_models.append(WordEmbeddings(model_name))
+            elif model_type == "fasttext":
+                embedding_models.append(FastTextEmbeddings(model_name))
             elif model_type == "char":
                 embedding_models.append(CharacterEmbeddings(model_name))
             elif model_type == "elmo":
