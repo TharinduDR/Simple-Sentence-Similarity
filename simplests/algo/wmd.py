@@ -165,4 +165,4 @@ class WordMoversDistanceSTSMethod:
 
         # Compute WMD.
         distance = emd(d1, d2, distance_matrix)
-        return 1 / (math.exp(distance))
+        return -distance
