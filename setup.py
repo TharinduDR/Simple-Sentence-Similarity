@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="simplests",
-    version="2.2.0",
+    version="2.3.0",
     author="Tharindu Ranasinghe",
     author_email="rhtdranasinghe@gmail.com",
     description="Unsupervised models for Semantic Textual Similarity",
