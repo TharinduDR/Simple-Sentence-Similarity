@@ -3,7 +3,6 @@ import pandas as pd
 from examples.evaluation import pearson_corr, spearman_corr, rmse
 from simplests.algo.cls import TransformerCLSSTSMethod
 from simplests.algo.labse import LaBSESTSMethod
-from simplests.algo.laser import LASERSTSMethod
 from simplests.algo.sbert import SentenceTransformerSTSMethod
 from simplests.algo.sif import WordEmbeddingSIFSTSMethod
 from simplests.algo.use import UniversalSentenceEncoderSTSMethod
@@ -99,18 +98,5 @@ print("RMSE ", rmse(sims, pred_sims))
 # print("Pearson correlation ", pearson_corr(sims, pred_sims))
 # print("Spearman correlation ", spearman_corr(sims, pred_sims))
 # print("RMSE ", rmse(sims, pred_sims))
-
-# -----------------------------------------------------------------------
-laser_model_args = SentenceEmbeddingSTSArgs()
-laser_model_args.language = "en"
-
-
-# model = WordEmbeddingAverageSTSMethod(model_args=model_args)
-model = LASERSTSMethod(model_args=laser_model_args)
-
-pred_sims = model.predict(to_predit)
-print("Pearson correlation ", pearson_corr(sims, pred_sims))
-print("Spearman correlation ", spearman_corr(sims, pred_sims))
-print("RMSE ", rmse(sims, pred_sims))
 
 

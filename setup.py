@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setup(
     name="simplests",
-    version="2.1.3",
+    version="2.2.0",
     author="Tharindu Ranasinghe",
     author_email="rhtdranasinghe@gmail.com",
     description="Unsupervised models for Semantic Textual Similarity",
@@ -30,7 +30,6 @@ setup(
         "stop_words",
         "tensorflow_text",
         "tensorflow_hub",
-        "sentence_transformers",
-        "laserembeddings",
+        "sentence_transformers"
     ],
 )
