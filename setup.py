@@ -24,7 +24,6 @@ setup(
         "pandas",
         "numpy",
         "flair",
-        "allennlp",
         "tqdm",
         "pyemd",
         "stop_words",
